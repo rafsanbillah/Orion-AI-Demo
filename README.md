@@ -135,6 +135,99 @@ Health check:
 GET http://localhost:5000/api/health
 ```
 
+## Free Deployment Plan
+
+Recommended free setup:
+
+- MongoDB Atlas free cluster for the database
+- Render free web service for the Express API
+- Vercel free project for the React frontend
+
+Your locally installed MongoDB is great for development, but a deployed backend cannot safely connect to a database running on your laptop. For the live portfolio demo, use MongoDB Atlas and put the Atlas connection string in Render as `MONGO_URI`.
+
+## MongoDB Atlas Setup
+
+1. Go to MongoDB Atlas and create a free `M0` cluster.
+2. Create a database user with a username and password.
+3. In Network Access, allow access for your deployment. For a beginner portfolio demo, you can use `0.0.0.0/0`. For production, restrict this.
+4. Copy the Node.js connection string.
+5. Replace `<password>` with your database user password.
+6. Use a database name at the end of the URI, for example:
+
+```text
+mongodb+srv://USERNAME:PASSWORD@cluster-url.mongodb.net/orion_ai_demo?retryWrites=true&w=majority
+```
+
+## Deploy Backend on Render
+
+1. Push this repo to GitHub.
+2. Go to Render and create a new Web Service from the GitHub repo.
+3. Use these settings:
+
+```text
+Root Directory: server
+Build Command: npm install
+Start Command: npm start
+```
+
+4. Add these Render environment variables:
+
+```text
+NODE_ENV=production
+CLIENT_URL=http://localhost:5173
+MONGO_URI=your_mongodb_atlas_connection_string
+ADMIN_EMAIL=your_admin_email
+ADMIN_PASSWORD=your_admin_password
+JWT_SECRET=a_long_random_secret
+```
+
+5. Deploy the service.
+6. Open the Render URL and test:
+
+```text
+https://your-render-app.onrender.com/api/health
+```
+
+The `database` value should say `connected`.
+
+## Deploy Frontend on Vercel
+
+1. Go to Vercel and import the same GitHub repo.
+2. Set the project root directory to:
+
+```text
+client
+```
+
+3. Use the default Vite settings:
+
+```text
+Build Command: npm run build
+Output Directory: dist
+```
+
+4. Add this Vercel environment variable:
+
+```text
+VITE_API_URL=https://your-render-app.onrender.com/api
+```
+
+5. Deploy the frontend.
+6. Copy the final Vercel URL.
+7. Go back to Render and update `CLIENT_URL` to the Vercel URL:
+
+```text
+CLIENT_URL=https://your-vercel-app.vercel.app
+```
+
+You can also keep local development allowed by using a comma-separated value:
+
+```text
+CLIENT_URL=http://localhost:5173,https://your-vercel-app.vercel.app
+```
+
+8. Redeploy the Render backend after changing `CLIENT_URL`.
+
 ## Demo Routes
 
 ```text
