@@ -1,17 +1,16 @@
 services:
   - type: web
-    name: orion-ai-demo-api
+    name: orion-ai-demo
     env: node
     plan: free
-    rootDir: server
-    buildCommand: npm install
-    startCommand: npm start
+    buildCommand: npm install --prefix server && npm install --prefix client && npm run build --prefix client
+    startCommand: npm start --prefix server
     healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
         value: production
       - key: CLIENT_URL
-        sync: false
+        value: https://orion-ai-demo.onrender.com
       - key: MONGO_URI
         sync: false
       - key: ADMIN_EMAIL

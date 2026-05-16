@@ -140,8 +140,8 @@ GET http://localhost:5000/api/health
 Recommended free setup:
 
 - MongoDB Atlas free cluster for the database
-- Render free web service for the Express API
-- Vercel free project for the React frontend
+- Render free web service for the full app demo URL
+- Optional Vercel free project if you prefer to host the React frontend separately
 
 Your locally installed MongoDB is great for development, but a deployed backend cannot safely connect to a database running on your laptop. For the live portfolio demo, use MongoDB Atlas and put the Atlas connection string in Render as `MONGO_URI`.
 
@@ -158,23 +158,23 @@ Your locally installed MongoDB is great for development, but a deployed backend 
 mongodb+srv://USERNAME:PASSWORD@cluster-url.mongodb.net/orion_ai_demo?retryWrites=true&w=majority
 ```
 
-## Deploy Backend on Render
+## Deploy Full Demo on Render
 
 1. Push this repo to GitHub.
 2. Go to Render and create a new Web Service from the GitHub repo.
 3. Use these settings:
 
 ```text
-Root Directory: server
-Build Command: npm install
-Start Command: npm start
+Name: orion-ai-demo
+Build Command: npm install --prefix server && npm install --prefix client && npm run build --prefix client
+Start Command: npm start --prefix server
 ```
 
 4. Add these Render environment variables:
 
 ```text
 NODE_ENV=production
-CLIENT_URL=http://localhost:5173
+CLIENT_URL=https://orion-ai-demo.onrender.com
 MONGO_URI=your_mongodb_atlas_connection_string
 ADMIN_EMAIL=your_admin_email
 ADMIN_PASSWORD=your_admin_password
@@ -190,7 +190,13 @@ https://your-render-app.onrender.com/api/health
 
 The `database` value should say `connected`.
 
-## Deploy Frontend on Vercel
+The free demo domain will be Render's generated URL. If the service name is available, it will look like:
+
+```text
+https://orion-ai-demo.onrender.com
+```
+
+## Optional: Deploy Frontend on Vercel
 
 1. Go to Vercel and import the same GitHub repo.
 2. Set the project root directory to:
