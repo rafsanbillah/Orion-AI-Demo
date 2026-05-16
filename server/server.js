@@ -32,11 +32,13 @@ app.use(
 )
 app.use(express.json())
 
-app.get('/', (req, res) => {
-  res.json({
-    message: 'MERN MVP API is running',
+if (process.env.NODE_ENV !== 'production') {
+  app.get('/', (req, res) => {
+    res.json({
+      message: 'MERN MVP API is running',
+    })
   })
-})
+}
 
 app.use('/api/health', healthRoutes)
 app.use('/api/chat', chatRoutes)
